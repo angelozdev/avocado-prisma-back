@@ -3,21 +3,37 @@
 
 
 type Attributes {
+  """The hardiness of the fruit."""
   hardiness: String
+
+  """The shape of the fruit."""
   shape: String
+
+  """The taste of the fruit."""
   taste: String
 }
 
+"""Avocado"""
 type Avocado implements BaseModel {
   attributes: Attributes
   createdAt: DateTime!
+
+  """The description of the fruit."""
   description: String!
 
   """The ID of the model."""
-  id: ID!
+  id: Int!
+
+  """The image of the fruit."""
   image: String!
+
+  """The name of the fruit."""
   name: String!
-  price: Int!
+
+  """The price of the fruit."""
+  price: Float!
+
+  """The SKU of the fruit."""
   sku: String!
   updatedAt: DateTime!
 }
@@ -26,28 +42,62 @@ interface BaseModel {
   createdAt: DateTime!
 
   """The ID of the model."""
-  id: ID!
+  id: Int!
   updatedAt: DateTime!
 }
 
 input CreateAvocadoInput {
   description: String!
+  hardiness: String
   image: String!
   name: String!
   price: Int!
+  shape: String
   sku: String!
+  taste: String
 }
 
 """Date custom scalar type"""
 scalar DateTime
 
+input Filter {
+  """The limit of the pagination."""
+  limit: Int = 10
+
+  """The offset of the pagination."""
+  offset: Int = 0
+
+  """Order by"""
+  orderBy: OrderBy = price
+
+  """Order direction"""
+  orderDirection: OrderDirection = asc
+}
+
 type Mutation {
   CreateAvocado(input: CreateAvocadoInput!): Avocado
 }
 
-type Query {
-  GetAllAvocados: [Avocado]!
+"""Order by"""
+enum OrderBy {
+  createdAt
+  description
+  id
+  image
+  name
+  price
+  sku
+  updatedAt
+}
 
+"""Order direction"""
+enum OrderDirection {
+  asc
+  desc
+}
+
+type Query {
   """Get an avocado by ID."""
-  GetAvocateById(id: ID!): Avocado
+  GetAvoById(id: Int!): Avocado
+  GetAvos(filter: Filter): [Avocado]!
 }

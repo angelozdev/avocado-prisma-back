@@ -4,6 +4,7 @@
  */
 
 
+import type { Context } from "./context"
 import type { core } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
@@ -30,14 +31,25 @@ declare global {
 export interface NexusGenInputs {
   CreateAvocadoInput: { // input type
     description: string; // String!
+    hardiness?: string | null; // String
     image: string; // String!
     name: string; // String!
     price: number; // Int!
+    shape?: string | null; // String
     sku: string; // String!
+    taste?: string | null; // String
+  }
+  Filter: { // input type
+    limit: number | null; // Int
+    offset?: number | null; // Int
+    orderBy: NexusGenEnums['OrderBy'] | null; // OrderBy
+    orderDirection: NexusGenEnums['OrderDirection'] | null; // OrderDirection
   }
 }
 
 export interface NexusGenEnums {
+  OrderBy: "createdAt" | "description" | "id" | "image" | "name" | "price" | "sku" | "updatedAt"
+  OrderDirection: "asc" | "desc"
 }
 
 export interface NexusGenScalars {
@@ -56,12 +68,13 @@ export interface NexusGenObjects {
     taste?: string | null; // String
   }
   Avocado: { // root type
+    attributes?: NexusGenRootTypes['Attributes'] | null; // Attributes
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     description: string; // String!
-    id: string; // ID!
+    id: number; // Int!
     image: string; // String!
     name: string; // String!
-    price: number; // Int!
+    price: number; // Float!
     sku: string; // String!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
@@ -78,7 +91,7 @@ export interface NexusGenUnions {
 
 export type NexusGenRootTypes = NexusGenInterfaces & NexusGenObjects
 
-export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
+export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
   Attributes: { // field return type
@@ -90,10 +103,10 @@ export interface NexusGenFieldTypes {
     attributes: NexusGenRootTypes['Attributes'] | null; // Attributes
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     description: string; // String!
-    id: string; // ID!
+    id: number; // Int!
     image: string; // String!
     name: string; // String!
-    price: number; // Int!
+    price: number; // Float!
     sku: string; // String!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
@@ -101,12 +114,12 @@ export interface NexusGenFieldTypes {
     CreateAvocado: NexusGenRootTypes['Avocado'] | null; // Avocado
   }
   Query: { // field return type
-    GetAllAvocados: Array<NexusGenRootTypes['Avocado'] | null>; // [Avocado]!
-    GetAvocateById: NexusGenRootTypes['Avocado'] | null; // Avocado
+    GetAvoById: NexusGenRootTypes['Avocado'] | null; // Avocado
+    GetAvos: Array<NexusGenRootTypes['Avocado'] | null>; // [Avocado]!
   }
   BaseModel: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
-    id: string; // ID!
+    id: number; // Int!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
 }
@@ -121,10 +134,10 @@ export interface NexusGenFieldTypeNames {
     attributes: 'Attributes'
     createdAt: 'DateTime'
     description: 'String'
-    id: 'ID'
+    id: 'Int'
     image: 'String'
     name: 'String'
-    price: 'Int'
+    price: 'Float'
     sku: 'String'
     updatedAt: 'DateTime'
   }
@@ -132,12 +145,12 @@ export interface NexusGenFieldTypeNames {
     CreateAvocado: 'Avocado'
   }
   Query: { // field return type name
-    GetAllAvocados: 'Avocado'
-    GetAvocateById: 'Avocado'
+    GetAvoById: 'Avocado'
+    GetAvos: 'Avocado'
   }
   BaseModel: { // field return type name
     createdAt: 'DateTime'
-    id: 'ID'
+    id: 'Int'
     updatedAt: 'DateTime'
   }
 }
@@ -149,8 +162,11 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
-    GetAvocateById: { // args
-      id: string; // ID!
+    GetAvoById: { // args
+      id: number; // Int!
+    }
+    GetAvos: { // args
+      filter?: NexusGenInputs['Filter'] | null; // Filter
     }
   }
 }
@@ -167,7 +183,7 @@ export type NexusGenObjectNames = keyof NexusGenObjects;
 
 export type NexusGenInputNames = keyof NexusGenInputs;
 
-export type NexusGenEnumNames = never;
+export type NexusGenEnumNames = keyof NexusGenEnums;
 
 export type NexusGenInterfaceNames = keyof NexusGenInterfaces;
 
@@ -188,7 +204,7 @@ export type NexusGenFeaturesConfig = {
 }
 
 export interface NexusGenTypes {
-  context: any;
+  context: Context;
   inputTypes: NexusGenInputs;
   rootTypes: NexusGenRootTypes;
   inputTypeShapes: NexusGenInputs & NexusGenEnums & NexusGenScalars;

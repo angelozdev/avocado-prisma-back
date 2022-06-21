@@ -5,12 +5,14 @@ import { PrismaClient } from "@prisma/client";
 
 import schema from "./schema";
 
-const prisma = new PrismaClient();
+const orm = new PrismaClient({
+  log: ["query", "info", "warn", "error"],
+});
 
 async function initialize() {
   const schemaPath = path.resolve(__dirname, "schema", "schema.graphql");
   const typeDefs = await readFile(schemaPath, "utf8");
-  const server = new ApolloServer({ typeDefs, schema, context: { prisma } });
+  const server = new ApolloServer({ typeDefs, schema, context: { orm } });
 
   server
     .listen()

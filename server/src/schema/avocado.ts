@@ -1,61 +1,74 @@
+import { Prisma } from "@prisma/client";
 import {
-  idArg,
-  interfaceType,
   nonNull,
   objectType,
   queryField,
   mutationField,
   inputObjectType,
+  intArg,
 } from "nexus";
-import { Avocado as IAvocado, Attributes as IAttributes } from "nexus-prisma";
-
-export const BaseModel = interfaceType({
-  name: "BaseModel",
-  definition(t) {
-    t.nonNull.id("id", { description: "The ID of the model." });
-    t.nonNull.field("createdAt", { type: "DateTime" });
-    t.nonNull.field("updatedAt", { type: "DateTime" });
-  },
-  resolveType: () => null,
-});
 
 export const Attributes = objectType({
-  name: IAttributes.$name,
-  description: IAttributes.$description,
+  name: "Attributes",
   definition(t) {
-    t.field(IAttributes.hardiness);
-    t.field(IAttributes.shape);
-    t.field(IAttributes.taste);
+    t.string("hardiness", { description: "The hardiness of the fruit." });
+    t.string("taste", { description: "The taste of the fruit." });
+    t.string("shape", { description: "The shape of the fruit." });
   },
 });
 
 export const Avocado = objectType({
-  name: IAvocado.$name,
-  description: IAvocado.$description,
+  name: "Avocado",
+  description: "Avocado",
   definition(t) {
-    t.implements(BaseModel);
-    t.field(IAvocado.name);
-    t.field(IAvocado.description);
-    t.field(IAvocado.price);
-    t.field(IAvocado.image);
-    t.field(IAvocado.sku);
-    t.field(IAvocado.attributes);
+    t.implements("BaseModel");
+    t.nonNull.string("name", { description: "The name of the fruit." });
+    t.nonNull.string("description", {
+      description: "The description of the fruit.",
+    });
+    t.field("attributes", { type: Attributes });
+    t.nonNull.string("image", { description: "The image of the fruit." });
+    t.nonNull.float("price", { description: "The price of the fruit." });
+    t.nonNull.string("sku", { description: "The SKU of the fruit." });
   },
 });
 
 // ****************************************** QUERIES *******************************************************
-const GetAvocateById = queryField("GetAvocateById", {
+const GetAvoById = queryField("GetAvoById", {
   type: Avocado,
-  args: { id: nonNull(idArg()) },
-  resolve: () => null,
+  args: { id: nonNull(intArg()) },
+  resolve: (_, args, context) => {
+    return context.orm.avocado.findFirst({
+      take: 1,
+      where: { id: args.id },
+      include: { attributes: true },
+    });
+  },
   description: "Get an avocado by ID.",
 });
 
-const GetAllAvocados = queryField((t) => {
-  t.nonNull.list.field("GetAllAvocados", { type: Avocado, resolve: () => [] });
+const GetAvos = queryField((t) => {
+  t.nonNull.list.field("GetAvos", {
+    args: { filter: "Filter" },
+    type: "Avocado",
+    resolve: (_, args, context) => {
+      const { limit, offset, orderBy, orderDirection } = args.filter || {};
+
+      return context.orm.avocado.findMany({
+        take: limit ?? 10,
+        skip: offset ?? 0,
+        include: {
+          attributes: true,
+        },
+        orderBy: {
+          [orderBy ?? "createdAt"]: orderDirection ?? "asc",
+        },
+      });
+    },
+  });
 });
 
-export const AvocadoQueries = [GetAvocateById, GetAllAvocados];
+export const AvocadoQueries = [GetAvoById, GetAvos];
 
 // ****************************************** MUTATIONS *******************************************************
 const CreateAvocadoInput = inputObjectType({
@@ -66,19 +79,31 @@ const CreateAvocadoInput = inputObjectType({
     t.nonNull.string("image");
     t.nonNull.int("price");
     t.nonNull.string("sku");
+    t.string("hardiness");
+    t.string("taste");
+    t.string("shape");
   },
 });
 
 const CreateAvocado = mutationField("CreateAvocado", {
   type: Avocado,
   args: { input: nonNull(CreateAvocadoInput) },
-  resolve: (source, args, context, info) => {
-    return {
-      ...args.input,
-      id: Date.now().toString(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+  resolve: (_, { input }, context) => {
+    const { description, image, name, price, sku, ...attributes } = input;
+    return context.orm.avocado.create({
+      data: {
+        description,
+        image,
+        name,
+        price,
+        sku,
+        attributes: {
+          create: {
+            ...attributes,
+          },
+        },
+      },
+    });
   },
 });
 

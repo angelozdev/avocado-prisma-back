@@ -1,0 +1,23 @@
+{
+  "0 debug pnpm:scope": {
+    "selected": 1
+  },
+  "1 info pnpm": {
+    "err": {
+      "name": "Error",
+      "message": "not found: dev",
+      "code": "ENOENT",
+      "stack": "Error: not found: dev\n    at getNotFoundError (/usr/local/Cellar/pnpm/7.2.1/libexec/lib/node_modules/pnpm/dist/pnpm.cjs:41759:51)\n    at Function.whichSync [as sync] (/usr/local/Cellar/pnpm/7.2.1/libexec/lib/node_modules/pnpm/dist/pnpm.cjs:41836:13)\n    at getCommandAbsolutePathSync (/usr/local/Cellar/pnpm/7.2.1/libexec/lib/node_modules/pnpm/dist/pnpm.cjs:43401:44)\n    at default_1 (/usr/local/Cellar/pnpm/7.2.1/libexec/lib/node_modules/pnpm/dist/pnpm.cjs:43410:32)\n    at /usr/local/Cellar/pnpm/7.2.1/libexec/lib/node_modules/pnpm/dist/pnpm.cjs:178873:39"
+    }
+  },
+  "2 error pnpm": {
+    "code": "ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL",
+    "prefix": "/Users/angelozdev/Me/platzi-courses/nodejs-graphql",
+    "err": {
+      "name": "pnpm",
+      "message": "not found: dev",
+      "code": "ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL",
+      "stack": "Error: not found: dev\n    at getNotFoundError (/usr/local/Cellar/pnpm/7.2.1/libexec/lib/node_modules/pnpm/dist/pnpm.cjs:41759:51)\n    at Function.whichSync [as sync] (/usr/local/Cellar/pnpm/7.2.1/libexec/lib/node_modules/pnpm/dist/pnpm.cjs:41836:13)\n    at getCommandAbsolutePathSync (/usr/local/Cellar/pnpm/7.2.1/libexec/lib/node_modules/pnpm/dist/pnpm.cjs:43401:44)\n    at default_1 (/usr/local/Cellar/pnpm/7.2.1/libexec/lib/node_modules/pnpm/dist/pnpm.cjs:43410:32)\n    at /usr/local/Cellar/pnpm/7.2.1/libexec/lib/node_modules/pnpm/dist/pnpm.cjs:178873:39"
+    }
+  }
+}

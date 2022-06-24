@@ -3,7 +3,8 @@ import { FastifyInstance } from "fastify";
 import { readFile } from "fs/promises";
 import { ApolloServer } from "apollo-server-fastify";
 import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
-import { PrismaClient } from "@prisma/client";
+import { prisma, PrismaClient, User } from "@prisma/client";
+import { verify } from "jsonwebtoken";
 
 import schema from "./schema";
 
@@ -30,7 +31,19 @@ async function getApolloServer(app: FastifyInstance) {
     const apolloServer = new ApolloServer({
       typeDefs,
       schema,
-      context: { orm },
+      context: ({ request }) => {
+        const encodedToken = (request.headers["authorization"] || "").replace(
+          "Bearer ",
+          ""
+        );
+        const token = encodedToken
+          ? (verify(encodedToken, process.env.JWT_SECRET || "") as {
+              user: { name: string; id: number };
+            })
+          : null;
+
+        return { orm, user: token?.user };
+      },
       csrfPrevention: true,
       cache: "bounded",
       plugins: [

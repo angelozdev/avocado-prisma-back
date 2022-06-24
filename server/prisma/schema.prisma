@@ -30,3 +30,10 @@ model Attributes {
   shape     String?
   taste     String?
 }
+
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}

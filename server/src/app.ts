@@ -8,4 +8,8 @@ app.register(fastifyStatic, {
   prefix: "/static",
 });
 
+app.get("/", async () => {
+  return "Hello World!";
+});
+
 export default app;

@@ -1,4 +1,3 @@
-import { Prisma } from "@prisma/client";
 import {
   nonNull,
   objectType,
@@ -88,7 +87,16 @@ const CreateAvocadoInput = inputObjectType({
 const CreateAvocado = mutationField("CreateAvocado", {
   type: Avocado,
   args: { input: nonNull(CreateAvocadoInput) },
-  resolve: (_, { input }, context) => {
+  resolve: async (_, { input }, context) => {
+    if (!context.user)
+      throw new Error("You must be logged in to create an avocado.");
+
+    const user = await context.orm.user.findUnique({
+      where: { id: context.user.id },
+    });
+
+    if (!user) throw new Error("You must be logged in to create an avocado.");
+
     const { description, image, name, price, sku, ...attributes } = input;
     return context.orm.avocado.create({
       data: {

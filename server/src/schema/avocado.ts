@@ -52,7 +52,6 @@ const GetAvos = queryField((t) => {
     args: { filter: "Filter" },
     type: "Avocado",
     resolve: async (_, args, context) => {
-      await hasValidUser(context);
       const { limit, offset, orderBy, orderDirection } = args.filter || {};
 
       return context.orm.avocado.findMany({

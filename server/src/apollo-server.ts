@@ -44,8 +44,8 @@ async function getApolloServer(app: FastifyInstance) {
 
         return { orm, user: { id: token?.userId ?? null } };
       },
-      csrfPrevention: true,
       cache: "bounded",
+      csrfPrevention: true,
       plugins: [
         fastifyAppClosePlugin(app),
         ApolloServerPluginDrainHttpServer({ httpServer: app.server }),
@@ -61,5 +61,9 @@ async function getApolloServer(app: FastifyInstance) {
 export async function registerApolloServer(app: FastifyInstance) {
   const apolloServer = await getApolloServer(app);
   await apolloServer.start();
-  app.register(apolloServer.createHandler({ path: "/graphql" }));
+  app.register(
+    apolloServer.createHandler({
+      path: "/graphql",
+    })
+  );
 }

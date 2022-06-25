@@ -1,28 +1,16 @@
 import path from "path";
 import { makeSchema } from "nexus";
 
-import {
-  Attributes,
-  Avocado,
-  AvocadoMutations,
-  AvocadoQueries,
-} from "./avocado";
-
+import * as Avocado from "./avocado";
+import * as User from "./user";
 import * as Common from "./common";
-import { DateScalar } from "./scalars";
+import * as Scalars from "./scalars";
 
 const sourcePath = path.join(__dirname, "..");
 const typesPath = path.join(sourcePath, "types");
 
 const schema = makeSchema({
-  types: [
-    Avocado,
-    DateScalar,
-    AvocadoQueries,
-    AvocadoMutations,
-    Attributes,
-    Common,
-  ],
+  types: [Avocado, Common, Scalars, User],
   outputs: {
     schema: path.resolve(__dirname, "schema.graphql"),
     typegen: path.resolve(typesPath, "generated.d.ts"),

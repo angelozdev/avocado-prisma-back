@@ -6,6 +6,7 @@ import {
   inputObjectType,
   intArg,
 } from "nexus";
+import { hasValidUser } from "../utils/guards";
 
 export const Attributes = objectType({
   name: "Attributes",
@@ -50,7 +51,8 @@ const GetAvos = queryField((t) => {
   t.nonNull.list.field("GetAvos", {
     args: { filter: "Filter" },
     type: "Avocado",
-    resolve: (_, args, context) => {
+    resolve: async (_, args, context) => {
+      await hasValidUser(context);
       const { limit, offset, orderBy, orderDirection } = args.filter || {};
 
       return context.orm.avocado.findMany({
@@ -88,15 +90,7 @@ const CreateAvocado = mutationField("CreateAvocado", {
   type: Avocado,
   args: { input: nonNull(CreateAvocadoInput) },
   resolve: async (_, { input }, context) => {
-    if (!context.user)
-      throw new Error("You must be logged in to create an avocado.");
-
-    const user = await context.orm.user.findUnique({
-      where: { id: context.user.id },
-    });
-
-    if (!user) throw new Error("You must be logged in to create an avocado.");
-
+    await hasValidUser(context);
     const { description, image, name, price, sku, ...attributes } = input;
     return context.orm.avocado.create({
       data: {

@@ -36,4 +36,6 @@ model User {
   username  String   @unique
   password  String
   createdAt DateTime @default(now())
+  email     String   @unique
+  updatedAt DateTime @default(now())
 }

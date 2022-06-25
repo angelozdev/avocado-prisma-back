@@ -39,6 +39,11 @@ export interface NexusGenInputs {
     sku: string; // String!
     taste?: string | null; // String
   }
+  CreateUser: { // input type
+    email: string; // String!
+    password: string; // String!
+    username: string; // String!
+  }
   Filter: { // input type
     limit: number | null; // Int
     offset?: number | null; // Int
@@ -80,10 +85,22 @@ export interface NexusGenObjects {
   }
   Mutation: {};
   Query: {};
+  Token: { // root type
+    accessToken: string; // String!
+    username: string; // String!
+  }
+  User: { // root type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    email: string; // String!
+    id: number; // Int!
+    password: string; // String!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    username: string; // String!
+  }
 }
 
 export interface NexusGenInterfaces {
-  BaseModel: NexusGenRootTypes['Avocado'];
+  BaseModel: NexusGenRootTypes['Avocado'] | NexusGenRootTypes['User'];
 }
 
 export interface NexusGenUnions {
@@ -112,10 +129,24 @@ export interface NexusGenFieldTypes {
   }
   Mutation: { // field return type
     CreateAvocado: NexusGenRootTypes['Avocado'] | null; // Avocado
+    SignUp: NexusGenRootTypes['User'] | null; // User
   }
   Query: { // field return type
     GetAvoById: NexusGenRootTypes['Avocado'] | null; // Avocado
     GetAvos: Array<NexusGenRootTypes['Avocado'] | null>; // [Avocado]!
+    LogIn: NexusGenRootTypes['Token'] | null; // Token
+  }
+  Token: { // field return type
+    accessToken: string; // String!
+    username: string; // String!
+  }
+  User: { // field return type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    email: string; // String!
+    id: number; // Int!
+    password: string; // String!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    username: string; // String!
   }
   BaseModel: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -143,10 +174,24 @@ export interface NexusGenFieldTypeNames {
   }
   Mutation: { // field return type name
     CreateAvocado: 'Avocado'
+    SignUp: 'User'
   }
   Query: { // field return type name
     GetAvoById: 'Avocado'
     GetAvos: 'Avocado'
+    LogIn: 'Token'
+  }
+  Token: { // field return type name
+    accessToken: 'String'
+    username: 'String'
+  }
+  User: { // field return type name
+    createdAt: 'DateTime'
+    email: 'String'
+    id: 'Int'
+    password: 'String'
+    updatedAt: 'DateTime'
+    username: 'String'
   }
   BaseModel: { // field return type name
     createdAt: 'DateTime'
@@ -160,6 +205,9 @@ export interface NexusGenArgTypes {
     CreateAvocado: { // args
       input: NexusGenInputs['CreateAvocadoInput']; // CreateAvocadoInput!
     }
+    SignUp: { // args
+      input: NexusGenInputs['CreateUser']; // CreateUser!
+    }
   }
   Query: {
     GetAvoById: { // args
@@ -168,15 +216,20 @@ export interface NexusGenArgTypes {
     GetAvos: { // args
       filter?: NexusGenInputs['Filter'] | null; // Filter
     }
+    LogIn: { // args
+      password: string; // String!
+      username: string; // String!
+    }
   }
 }
 
 export interface NexusGenAbstractTypeMembers {
-  BaseModel: "Avocado"
+  BaseModel: "Avocado" | "User"
 }
 
 export interface NexusGenTypeInterfaces {
   Avocado: "BaseModel"
+  User: "BaseModel"
 }
 
 export type NexusGenObjectNames = keyof NexusGenObjects;

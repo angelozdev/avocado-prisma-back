@@ -57,6 +57,17 @@ input CreateAvocadoInput {
   taste: String
 }
 
+input CreateUser {
+  """The email of the user."""
+  email: String!
+
+  """The password of the user."""
+  password: String!
+
+  """The username of the user."""
+  username: String!
+}
+
 """Date custom scalar type"""
 scalar DateTime
 
@@ -76,6 +87,7 @@ input Filter {
 
 type Mutation {
   CreateAvocado(input: CreateAvocadoInput!): Avocado
+  SignUp(input: CreateUser!): User
 }
 
 """Order by"""
@@ -100,4 +112,36 @@ type Query {
   """Get an avocado by ID."""
   GetAvoById(id: Int!): Avocado
   GetAvos(filter: Filter): [Avocado]!
+  LogIn(
+    """The password of the user."""
+    password: String!
+
+    """The username of the user."""
+    username: String!
+  ): Token
+}
+
+type Token {
+  """The token of the user."""
+  accessToken: String!
+
+  """The username of the user."""
+  username: String!
+}
+
+type User implements BaseModel {
+  createdAt: DateTime!
+
+  """The email of the user."""
+  email: String!
+
+  """The ID of the model."""
+  id: Int!
+
+  """The password of the user."""
+  password: String!
+  updatedAt: DateTime!
+
+  """The name of the user."""
+  username: String!
 }

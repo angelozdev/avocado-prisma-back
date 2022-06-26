@@ -163,21 +163,53 @@ export type User = BaseModel & {
   username: Scalars['String'];
 };
 
+export type GetAvoByIdQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type GetAvoByIdQuery = { __typename?: 'Query', GetAvoById?: { __typename?: 'Avocado', id: number, name: string, description: string, createdAt: any, updatedAt: any, image: string, price: number, sku: string } | null };
+
 export type GetAvosQueryVariables = Exact<{
   filter?: InputMaybe<Filter>;
 }>;
 
 
-export type GetAvosQuery = { __typename?: 'Query', GetAvos: Array<{ __typename?: 'Avocado', name: string, image: string, price: number, sku: string, description: string, id: number } | null> };
+export type GetAvosQuery = { __typename?: 'Query', GetAvos: Array<{ __typename?: 'Avocado', name: string, image: string, price: number, description: string, id: number } | null> };
 
 
+export const GetAvoByIdDocument = `
+    query getAvoById($id: Int!) {
+  GetAvoById(id: $id) {
+    id
+    name
+    description
+    createdAt
+    updatedAt
+    image
+    price
+    sku
+  }
+}
+    `;
+export const useGetAvoByIdQuery = <
+      TData = GetAvoByIdQuery,
+      TError = unknown
+    >(
+      variables: GetAvoByIdQueryVariables,
+      options?: UseQueryOptions<GetAvoByIdQuery, TError, TData>
+    ) =>
+    useQuery<GetAvoByIdQuery, TError, TData>(
+      ['getAvoById', variables],
+      graphqlFetcher<GetAvoByIdQuery, GetAvoByIdQueryVariables>(GetAvoByIdDocument, variables),
+      options
+    );
 export const GetAvosDocument = `
-    query GetAvos($filter: Filter) {
+    query getAvos($filter: Filter) {
   GetAvos(filter: $filter) {
     name
     image
     price
-    sku
     description
     id
   }
@@ -191,7 +223,7 @@ export const useGetAvosQuery = <
       options?: UseQueryOptions<GetAvosQuery, TError, TData>
     ) =>
     useQuery<GetAvosQuery, TError, TData>(
-      variables === undefined ? ['GetAvos'] : ['GetAvos', variables],
+      variables === undefined ? ['getAvos'] : ['getAvos', variables],
       graphqlFetcher<GetAvosQuery, GetAvosQueryVariables>(GetAvosDocument, variables),
       options
     );

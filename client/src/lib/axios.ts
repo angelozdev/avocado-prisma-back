@@ -9,9 +9,7 @@ export function graphqlFetcher<TData, TVariables>(
   query: string,
   variables?: TVariables
 ) {
-  const queryFunction: QueryFunction<TData, [string, TVariables]> = async ({
-    signal,
-  }) => {
+  const queryFunction: QueryFunction<TData> = async ({ signal }) => {
     const { data } = await axios.post<{ data: TData }>(
       import.meta.env.VITE_ENDPOINT,
       { query, variables },

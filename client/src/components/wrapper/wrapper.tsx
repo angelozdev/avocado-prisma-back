@@ -1,8 +1,15 @@
 import type { PropsWithChildren } from "react";
 import styles from "./wrapper.module.css";
 
-function Wrapper({ children }: PropsWithChildren) {
-  return <div className={styles["wrapper"]}>{children}</div>;
+type Size = "sm" | "md" | "lg";
+type Props = PropsWithChildren<{ size?: Size }>;
+
+function Wrapper({ children, size = "md" }: Props) {
+  return (
+    <div className={[styles["wrapper"], styles[size]].join(" ")}>
+      {children}
+    </div>
+  );
 }
 
 export default Wrapper;

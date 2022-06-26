@@ -1,50 +1,26 @@
 import React from "react";
-import {
-  AvoItem,
-  AvoList,
-  AvoListPlaceholder,
-  Pagination,
-  Wrapper,
-} from "./components";
-import { useGetAvosQuery, OrderBy, OrderDirection } from "./generated/graphql";
+import { Outlet, Router } from "@tanstack/react-location";
+import { QueryClientProvider } from "react-query";
+import { ReactLocationDevtools } from "@tanstack/react-location-devtools";
+import { ReactQueryDevtools } from "react-query/devtools";
 
-const AVOS_PER_PAGE = 4;
+import { reactLocation, reactQuery } from "./lib";
+import { routes } from "./routes";
+import { __DEV__ } from "./utils/assertions";
+import { Splash } from "./components";
 
 function App() {
-  const [page, setPage] = React.useState(1);
-  const { data = { GetAvos: [] }, isLoading } = useGetAvosQuery(
-    {
-      filter: {
-        limit: AVOS_PER_PAGE,
-        offset: (page - 1) * AVOS_PER_PAGE,
-        orderBy: OrderBy.Price,
-        orderDirection: OrderDirection.Desc,
-      },
-    },
-    { staleTime: Infinity }
-  );
-
-  const hasNextPage = !(data.GetAvos.length < AVOS_PER_PAGE);
-
   return (
-    <main>
-      <Wrapper>
-        <h1>Avos</h1>
+    <QueryClientProvider client={reactQuery}>
+      <React.Suspense fallback={<Splash />}>
+        <Router routes={routes} location={reactLocation}>
+          <Outlet />
+          {__DEV__ && <ReactLocationDevtools position="bottom-right" />}
+        </Router>
+      </React.Suspense>
 
-        {isLoading && <AvoListPlaceholder count={AVOS_PER_PAGE} />}
-        <AvoList>
-          {data.GetAvos.map((avo) => {
-            if (!avo) return null;
-            return <AvoItem key={avo.id} avo={avo} />;
-          })}
-        </AvoList>
-
-        {!isLoading && !data.GetAvos.length && (
-          <p>No avos found. Please try again later.</p>
-        )}
-        <Pagination hasNextPage={hasNextPage} onPageChange={setPage} />
-      </Wrapper>
-    </main>
+      {__DEV__ && <ReactQueryDevtools />}
+    </QueryClientProvider>
   );
 }
 

@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-location";
 import { ImgHTMLAttributes, PropsWithChildren } from "react";
 import { GetAvosQuery } from "../../generated/graphql";
 import styles from "./avo-list.module.css";
@@ -9,10 +10,12 @@ interface Props {
 interface ImageProps extends ImgHTMLAttributes<HTMLImageElement> {}
 
 function AvoItem({ avo }: Props) {
-  const { name, description, image } = avo;
+  const { name, description, image, id } = avo;
   return (
     <Container>
-      <Image src={image} alt={name} />
+      <Link to={`/avos/${id}`}>
+        <Image src={image} alt={name} />
+      </Link>
       <Details>
         <Title>{name}</Title>
         <Description>{description}</Description>

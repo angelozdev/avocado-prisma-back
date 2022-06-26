@@ -1,9 +1,8 @@
-query GetAvos($filter: Filter) {
+query getAvos($filter: Filter) {
   GetAvos(filter: $filter) {
     name
     image
     price
-    sku
     description
     id
   }

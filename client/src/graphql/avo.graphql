@@ -1,0 +1,12 @@
+query getAvoById($id: Int!) {
+  GetAvoById(id: $id) {
+    id
+    name
+    description
+    createdAt
+    updatedAt
+    image
+    price
+    sku
+  }
+}

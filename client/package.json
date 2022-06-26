@@ -9,7 +9,7 @@
     "graphql:generate": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
-    "@graphql-codegen/typescript-react-query": "^3.5.14",
+    "@tanstack/react-location": "^3.7.4",
     "axios": "^0.27.2",
     "graphql": "^16.5.0",
     "react": "^18.0.0",
@@ -21,6 +21,8 @@
     "@graphql-codegen/introspection": "^2.1.1",
     "@graphql-codegen/typescript": "2.5.1",
     "@graphql-codegen/typescript-operations": "2.4.2",
+    "@graphql-codegen/typescript-react-query": "^3.5.14",
+    "@tanstack/react-location-devtools": "^3.4.4",
     "@types/node": "^18.0.0",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",

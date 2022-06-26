@@ -4,13 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "rimraf dist && tsc && npm run prisma:generate && npm run copyfiles",
-    "copyfiles": "node scripts/build.js",
     "dev": "NODE_ENV=development nodemon src/index.ts",
     "postinstall": "npm run prisma:generate",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate deploy",
-    "start": "NODE_ENV=production node dist/src/index.js"
+    "start": "NODE_ENV=production ts-node src/index.ts"
   },
   "keywords": [],
   "author": "",

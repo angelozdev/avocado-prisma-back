@@ -8,9 +8,10 @@ import { verify } from "jsonwebtoken";
 
 import schema from "./schema";
 import { enviromentVariables } from "./utils";
+import { __DEV__ } from "./utils/assertions";
 
 const orm = new PrismaClient({
-  log: ["query", "info", "warn", "error"],
+  log: __DEV__ ? ["query", "info", "warn", "error"] : undefined,
 });
 
 function fastifyAppClosePlugin(app: FastifyInstance) {

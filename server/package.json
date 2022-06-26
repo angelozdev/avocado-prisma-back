@@ -4,8 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/index.ts",
-    "prisma:generate": "prisma generate"
+    "dev": "NODE_ENV=development nodemon src/index.ts",
+    "postinstall": "npm run prisma:generate",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate deploy",
+    "start": "NODE_ENV=production ts-node src/index.ts"
   },
   "keywords": [],
   "author": "",

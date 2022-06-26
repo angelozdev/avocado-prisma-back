@@ -3,8 +3,15 @@
   "version": "1.0.0",
   "description": "https://platzi.com/cursos/nodejs-graphql/",
   "main": "index.ts",
+  "workspaces": [
+    "client",
+    "server"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build:client": "npm run build --workspace client",
+    "start:dev:server": "npm run dev --workspace server",
+    "start:server": "npm run start --workspace server",
+    "preview:client": "npm run preview --workspace client"
   },
   "author": "Angelo Zambrano <angelozam17@gmail.com>",
   "license": "MIT"

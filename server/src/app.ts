@@ -4,7 +4,7 @@ import fastifyStatic from "@fastify/static";
 
 const app = fastify();
 app.register(fastifyStatic, {
-  root: path.resolve(__dirname, "..", "static"),
+  root: path.resolve(__dirname, "static"),
   prefix: "/static",
 });
 

@@ -8,7 +8,8 @@
     "postinstall": "npm run prisma:generate",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate deploy",
-    "start": "NODE_ENV=production ts-node src/index.ts"
+    "start": "NODE_ENV=production ts-node src/index.ts",
+    "heroku-postbuild": "npm run postinstall"
   },
   "keywords": [],
   "author": "",

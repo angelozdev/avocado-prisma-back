@@ -9,7 +9,7 @@
     "graphql:generate": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
-    "@tanstack/react-location": "^3.7.4",
+    "@tanstack/react-location": "^3.4.4",
     "axios": "^0.27.2",
     "graphql": "^16.5.0",
     "react": "^18.0.0",

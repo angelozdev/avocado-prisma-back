@@ -1,0 +1,22 @@
+.label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field {
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
+.input {
+  padding: 0.5rem;
+  width: 100%;
+  display: inline-block;
+}
+
+.error {
+  color: red;
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+}

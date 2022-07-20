@@ -182,6 +182,14 @@ export type GetAvosQueryVariables = Exact<{
 
 export type GetAvosQuery = { __typename?: 'Query', GetAvos: Array<{ __typename?: 'Avocado', name: string, image: string, price: number, description: string, id: number } | null> };
 
+export type LoginQueryVariables = Exact<{
+  password: Scalars['String'];
+  username: Scalars['String'];
+}>;
+
+
+export type LoginQuery = { __typename?: 'Query', LogIn?: { __typename?: 'Token', username: string, accessToken: string } | null };
+
 
 export const GetAvoByIdDocument = `
     query getAvoById($id: Int!) {
@@ -199,7 +207,7 @@ export const GetAvoByIdDocument = `
     `;
 export const useGetAvoByIdQuery = <
       TData = GetAvoByIdQuery,
-      TError = unknown
+      TError = import('graphql-request').ClientError
     >(
       client: GraphQLClient,
       variables: GetAvoByIdQueryVariables,
@@ -231,7 +239,7 @@ export const GetAvosDocument = `
     `;
 export const useGetAvosQuery = <
       TData = GetAvosQuery,
-      TError = unknown
+      TError = import('graphql-request').ClientError
     >(
       client: GraphQLClient,
       variables?: GetAvosQueryVariables,
@@ -250,3 +258,32 @@ useGetAvosQuery.getKey = (variables?: GetAvosQueryVariables) => variables === un
 ;
 
 useGetAvosQuery.fetcher = (client: GraphQLClient, variables?: GetAvosQueryVariables, headers?: RequestInit['headers']) => fetcher<GetAvosQuery, GetAvosQueryVariables>(client, GetAvosDocument, variables, headers);
+export const LoginDocument = `
+    query Login($password: String!, $username: String!) {
+  LogIn(password: $password, username: $username) {
+    username
+    accessToken
+  }
+}
+    `;
+export const useLoginQuery = <
+      TData = LoginQuery,
+      TError = import('graphql-request').ClientError
+    >(
+      client: GraphQLClient,
+      variables: LoginQueryVariables,
+      options?: UseQueryOptions<LoginQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) =>
+    useQuery<LoginQuery, TError, TData>(
+      ['Login', variables],
+      fetcher<LoginQuery, LoginQueryVariables>(client, LoginDocument, variables, headers),
+      options
+    );
+useLoginQuery.document = LoginDocument;
+
+
+useLoginQuery.getKey = (variables: LoginQueryVariables) => ['Login', variables];
+;
+
+useLoginQuery.fetcher = (client: GraphQLClient, variables: LoginQueryVariables, headers?: RequestInit['headers']) => fetcher<LoginQuery, LoginQueryVariables>(client, LoginDocument, variables, headers);

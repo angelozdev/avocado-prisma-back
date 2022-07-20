@@ -12,6 +12,7 @@ generates:
       exposeDocument: true
       exposeQueryKeys: true
       exposeFetcher: true
+      errorType: "import('graphql-request').ClientError"
   ./graphql.schema.json:
     plugins:
       - "introspection"

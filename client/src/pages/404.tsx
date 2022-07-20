@@ -1,15 +1,14 @@
-import { useNavigate } from "@tanstack/react-location";
+import { Link, useNavigate } from "@tanstack/react-location";
+import { Wrapper } from "../components";
 import { Routes } from "../routes/routes";
 
 function Page404() {
-  const navigate = useNavigate();
   return (
-    <div>
-      <span>404</span>
-      <button onClick={() => navigate({ to: Routes.AVO_LIST })}>
-        Go to home
-      </button>
-    </div>
+    <Wrapper full>
+      <span>
+        We are lost. <Link to={Routes.AVO_LIST}>Go to home</Link>
+      </span>
+    </Wrapper>
   );
 }
 

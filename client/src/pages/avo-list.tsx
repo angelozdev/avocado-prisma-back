@@ -9,6 +9,7 @@ import {
   Wrapper,
 } from "../components";
 import { useGetAvosQuery, OrderBy, OrderDirection } from "../generated/graphql";
+import { useAuth } from "../hooks";
 import { graphqlClient } from "../lib";
 
 const AVOS_PER_PAGE = 4;
@@ -27,6 +28,7 @@ type Params = MakeGenerics<{
 }>;
 
 function AvoListPage() {
+  const { username, isAuthenticated } = useAuth();
   const { page: pageFromParams } = useSearch<Params>();
   const navigate = useNavigate<Params>();
   const queryClient = useQueryClient();
@@ -61,7 +63,7 @@ function AvoListPage() {
   return (
     <main>
       <Wrapper>
-        <h1>Avos</h1>
+        {isAuthenticated && <h1>Hello, {username}!</h1>}
 
         {isLoading && <AvoListPlaceholder count={AVOS_PER_PAGE} />}
         <AvoList>

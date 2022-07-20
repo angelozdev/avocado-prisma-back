@@ -1,4 +1,6 @@
+import { MakeGenerics, useNavigate, useSearch } from "@tanstack/react-location";
 import React from "react";
+import { useQueryClient } from "react-query";
 import {
   AvoItem,
   AvoList,
@@ -7,24 +9,54 @@ import {
   Wrapper,
 } from "../components";
 import { useGetAvosQuery, OrderBy, OrderDirection } from "../generated/graphql";
+import { graphqlClient } from "../lib";
 
 const AVOS_PER_PAGE = 4;
+const MINUTE = 60 * 1000;
+const defaultFilter = {
+  limit: AVOS_PER_PAGE,
+  offset: 0,
+  orderBy: OrderBy.Price,
+  orderDirection: OrderDirection.Desc,
+};
+
+type Params = MakeGenerics<{
+  Search: {
+    page: number;
+  };
+}>;
 
 function AvoListPage() {
-  const [page, setPage] = React.useState(1);
+  const { page: pageFromParams } = useSearch<Params>();
+  const navigate = useNavigate<Params>();
+  const queryClient = useQueryClient();
+  const [page, setPage] = React.useState(pageFromParams || 1);
   const { data = { GetAvos: [] }, isLoading } = useGetAvosQuery(
+    graphqlClient,
     {
       filter: {
-        limit: AVOS_PER_PAGE,
+        ...defaultFilter,
         offset: (page - 1) * AVOS_PER_PAGE,
-        orderBy: OrderBy.Price,
-        orderDirection: OrderDirection.Desc,
       },
     },
-    { staleTime: Infinity }
+    { staleTime: MINUTE }
   );
 
   const hasNextPage = !(data.GetAvos.length < AVOS_PER_PAGE);
+
+  React.useEffect(() => {
+    const nextOffset = page * AVOS_PER_PAGE;
+
+    const prefetchNextAvos = () => {
+      const filter = { ...defaultFilter, offset: nextOffset };
+      queryClient.prefetchQuery(useGetAvosQuery.getKey({ filter }), {
+        queryFn: useGetAvosQuery.fetcher(graphqlClient, { filter }),
+      });
+    };
+
+    prefetchNextAvos();
+    navigate({ search: { page } });
+  }, [page]);
 
   return (
     <main>
@@ -42,7 +74,11 @@ function AvoListPage() {
         {!isLoading && !data.GetAvos.length && (
           <p>No avos found. Please try again later.</p>
         )}
-        <Pagination hasNextPage={hasNextPage} onPageChange={setPage} />
+        <Pagination
+          hasNextPage={hasNextPage}
+          page={page}
+          onPageChange={setPage}
+        />
       </Wrapper>
     </main>
   );

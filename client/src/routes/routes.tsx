@@ -1,5 +1,10 @@
 import { Route, Navigate } from "@tanstack/react-location";
-import { AvoListPage, AvoDetailsPage } from "../pages";
+import { AvoListPage, AvoDetailsPage, Page404 } from "../pages";
+
+export enum Routes {
+  AVO_LIST = "/",
+  AVO_DETAILS = "/avos/:id",
+}
 
 const routes: Route[] = [
   {
@@ -20,7 +25,7 @@ const routes: Route[] = [
     ],
   },
   {
-    element: <div>404</div>,
+    element: <Page404 />,
   },
 ];
 

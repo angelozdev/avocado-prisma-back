@@ -5,17 +5,22 @@ interface Props {
   initialPage?: number;
   onPageChange: (page: number) => void;
   hasNextPage?: boolean;
+  page?: number;
 }
 
 function Pagination({
   initialPage = 1,
   onPageChange,
   hasNextPage = true,
+  page: currentPage,
 }: Props) {
-  const [page, setPage] = React.useState<number>(initialPage);
+  const controlledPage = currentPage !== undefined;
+  const [localPage, setLocalPage] = React.useState<number>(
+    controlledPage ? currentPage : initialPage
+  );
 
   const handlePreviousPage = () => {
-    setPage((currentPage) => {
+    setLocalPage((currentPage) => {
       const nextPage = currentPage - 1;
       if (nextPage < 1) return 1;
       onPageChange(nextPage);
@@ -26,24 +31,30 @@ function Pagination({
   const handleNextPage = () => {
     if (!hasNextPage) return;
 
-    setPage((currentPage) => {
+    setLocalPage((currentPage) => {
       const nextPage = currentPage + 1;
       onPageChange(nextPage);
       return nextPage;
     });
   };
 
+  React.useEffect(() => {
+    if (controlledPage) {
+      setLocalPage(currentPage);
+    }
+  }, [controlledPage, currentPage]);
+
   return (
     <div className={styles["container"]}>
       <div className={styles["grid"]}>
         <button
-          disabled={page <= 1}
+          disabled={localPage <= 1}
           onClick={handlePreviousPage}
           className={styles["button"]}
         >
           &lsaquo;
         </button>
-        <span className={styles["page-display"]}>{page}</span>
+        <span className={styles["page-display"]}>{localPage}</span>
         <button
           disabled={!hasNextPage}
           onClick={handleNextPage}

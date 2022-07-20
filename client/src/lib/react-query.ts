@@ -11,12 +11,12 @@ const client = new QueryClient({
   },
 });
 
-const persistor = createWebStoragePersistor({ storage: sessionStorage });
+// const persistor = createWebStoragePersistor({ storage: window.sessionStorage });
 
-persistQueryClient({
-  queryClient: client,
-  persistor,
-  maxAge: 1000 * 60 * 60,
-});
+// persistQueryClient({
+//   queryClient: client,
+//   persistor,
+//   maxAge: 1000 * 60 * 60, // 1 hour
+// });
 
 export default client;

@@ -8,8 +8,10 @@ generates:
       - "typescript-operations"
       - "typescript-react-query"
     config:
-      fetcher:
-        func: "../lib/axios#graphqlFetcher"
+      fetcher: "graphql-request"
+      exposeDocument: true
+      exposeQueryKeys: true
+      exposeFetcher: true
   ./graphql.schema.json:
     plugins:
       - "introspection"

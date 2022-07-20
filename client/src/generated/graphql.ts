@@ -1,10 +1,15 @@
+import { GraphQLClient } from 'graphql-request';
+import { RequestInit } from 'graphql-request/dist/types.dom';
 import { useQuery, UseQueryOptions } from 'react-query';
-import { graphqlFetcher } from '../lib/axios';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+
+function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variables?: TVariables, headers?: RequestInit['headers']) {
+  return async (): Promise<TData> => client.request<TData, TVariables>(query, variables, headers);
+}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -196,14 +201,23 @@ export const useGetAvoByIdQuery = <
       TData = GetAvoByIdQuery,
       TError = unknown
     >(
+      client: GraphQLClient,
       variables: GetAvoByIdQueryVariables,
-      options?: UseQueryOptions<GetAvoByIdQuery, TError, TData>
+      options?: UseQueryOptions<GetAvoByIdQuery, TError, TData>,
+      headers?: RequestInit['headers']
     ) =>
     useQuery<GetAvoByIdQuery, TError, TData>(
       ['getAvoById', variables],
-      graphqlFetcher<GetAvoByIdQuery, GetAvoByIdQueryVariables>(GetAvoByIdDocument, variables),
+      fetcher<GetAvoByIdQuery, GetAvoByIdQueryVariables>(client, GetAvoByIdDocument, variables, headers),
       options
     );
+useGetAvoByIdQuery.document = GetAvoByIdDocument;
+
+
+useGetAvoByIdQuery.getKey = (variables: GetAvoByIdQueryVariables) => ['getAvoById', variables];
+;
+
+useGetAvoByIdQuery.fetcher = (client: GraphQLClient, variables: GetAvoByIdQueryVariables, headers?: RequestInit['headers']) => fetcher<GetAvoByIdQuery, GetAvoByIdQueryVariables>(client, GetAvoByIdDocument, variables, headers);
 export const GetAvosDocument = `
     query getAvos($filter: Filter) {
   GetAvos(filter: $filter) {
@@ -219,11 +233,20 @@ export const useGetAvosQuery = <
       TData = GetAvosQuery,
       TError = unknown
     >(
+      client: GraphQLClient,
       variables?: GetAvosQueryVariables,
-      options?: UseQueryOptions<GetAvosQuery, TError, TData>
+      options?: UseQueryOptions<GetAvosQuery, TError, TData>,
+      headers?: RequestInit['headers']
     ) =>
     useQuery<GetAvosQuery, TError, TData>(
       variables === undefined ? ['getAvos'] : ['getAvos', variables],
-      graphqlFetcher<GetAvosQuery, GetAvosQueryVariables>(GetAvosDocument, variables),
+      fetcher<GetAvosQuery, GetAvosQueryVariables>(client, GetAvosDocument, variables, headers),
       options
     );
+useGetAvosQuery.document = GetAvosDocument;
+
+
+useGetAvosQuery.getKey = (variables?: GetAvosQueryVariables) => variables === undefined ? ['getAvos'] : ['getAvos', variables];
+;
+
+useGetAvosQuery.fetcher = (client: GraphQLClient, variables?: GetAvosQueryVariables, headers?: RequestInit['headers']) => fetcher<GetAvosQuery, GetAvosQueryVariables>(client, GetAvosDocument, variables, headers);

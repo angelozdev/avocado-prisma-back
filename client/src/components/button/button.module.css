@@ -15,6 +15,7 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  transition: all 0.2s ease;
 }
 
 .button.full {
@@ -24,4 +25,17 @@
 .button:disabled {
   cursor: not-allowed;
   opacity: 0.5;
+}
+
+.button:hover:not(:disabled) {
+  background-color: #e8e8e8;
+}
+
+.button:active:not(:disabled) {
+  transform: scale(98%);
+}
+
+.button:focus:not(:disabled) {
+  outline: rgb(114, 114, 114) solid 2px;
+  outline-offset: 2px;
 }
